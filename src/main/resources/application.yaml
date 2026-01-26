@@ -1,4 +1,26 @@
 spring:
+  security:
+    jwt:
+      secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351
+      access-token-expiration: 3600
+      refresh-token-expiration: 604800
+    oauth2:
+      enable: true
+      provider:
+        google:
+          client-id:
+          client-secret:
+          redirect-uri: http://localhost:8080/login/oauth2/code/google
+          scope:
+            - email
+            - profile
+        facebook:
+          client-id: ${FACEBOOK_APP_ID}
+          client-secret: ${FACEBOOK_APP_SECRET}
+          redirect-uri: http://localhost:8080/login/oauth2/code/facebook
+          scope:
+            - email
+            - public_profile
   datasource:
     url: jdbc:postgresql://localhost:5432/pod_db
     username: postgres
@@ -14,6 +36,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
     open-in-view: false
+
 

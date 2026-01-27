@@ -2,26 +2,17 @@ package com.shirt.pod.mapper;
 
 import com.shirt.pod.model.dto.response.OrderDTO;
 import com.shirt.pod.model.entity.Order;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.time.ZoneId;
+import java.util.List;
 
-@Component
-public class OrderMapper {
-    public OrderDTO toOrderDTO(Order order) {
-        return OrderDTO.builder()
-                .id(order.getId())
-                .status(order.getStatus())
-                .totalAmount(order.getTotalAmount())
-                .shippingFee(order.getShippingFee())
-                .recipientName(order.getRecipientName())
-                .recipientPhone(order.getRecipientPhone())
-                .shippingAddress(order.getShippingAddress())
-                .paymentMethod(order.getPaymentMethod())
-                .paymentStatus(order.getPaymentStatus())
-                .note(order.getNote())
-                .userId(order.getUserId())
-                .createdDate(order.getCreatedDate() != null ? order.getCreatedDate().atZone(ZoneId.systemDefault()).toLocalDateTime() : null)
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface OrderMapper {
+
+    @Mapping(target = "createdDate", expression = "java(order.getCreatedDate() != null ? " +
+            "order.getCreatedDate().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null)")
+    OrderDTO toDTO(Order order);
+
+    List<OrderDTO> toDTOList(List<Order> orders);
 }

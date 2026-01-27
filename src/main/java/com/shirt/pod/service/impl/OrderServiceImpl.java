@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +30,6 @@ public class OrderServiceImpl implements OrderService {
             orders = orderRepository.findAll();
         }
         log.info("Found {} orders", orders.size());
-        return orders.stream()
-                .map(orderMapper::toOrderDTO)
-                .collect(Collectors.toList());
+        return orderMapper.toDTOList(orders);
     }
 }

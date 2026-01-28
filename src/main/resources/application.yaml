@@ -2,13 +2,14 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pod_db
     username: postgres
-    password: root
+    password: admin
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    defer-datasource-initialization: true
 
     properties:
       hibernate:
@@ -16,4 +17,9 @@ spring:
         format_sql: true
 
     open-in-view: false
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
 

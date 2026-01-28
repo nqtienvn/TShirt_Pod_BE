@@ -27,18 +27,10 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    private Instant createdDate;
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "modified_date")
-    private Instant modifiedDate;
-
-    @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
-
-    @LastModifiedBy
-    @Column(name = "modified_by")
-    private String modifiedBy;
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 }

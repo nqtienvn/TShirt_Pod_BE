@@ -8,6 +8,8 @@ import com.shirt.pod.repository.OrderRepository;
 import com.shirt.pod.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,15 +23,19 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDTO> getOrders(OrderStatus status) {
-        log.info("Fetching orders with status: {}", status);
-        List<Order> orders;
-        if (status != null) {
-            orders = orderRepository.findByStatus(status);
-        } else {
-            orders = orderRepository.findAll();
-        }
-        log.info("Found {} orders", orders.size());
-        return orderMapper.toDTOList(orders);
+    public Page<OrderDTO> getOrders(OrderStatus status, Pageable pageable) {
+        log.info("Fetching orders with status: {}, pageable: {}", status, pageable);
+
+        Page<Order> orderPage = (status != null)
+                ? orderRepository.findByStatus(status, pageable)
+                : orderRepository.findAll(pageable);
+
+        log.info("Found {} orders (page {}/{}, size {})",
+                orderPage.getTotalElements(),
+                orderPage.getNumber(),
+                orderPage.getTotalPages(),
+                orderPage.getSize());
+
+        return orderPage.map(orderMapper::toDTO);
     }
 }

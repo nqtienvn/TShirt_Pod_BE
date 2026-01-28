@@ -9,7 +9,6 @@ import com.shirt.pod.model.entity.User;
 import com.shirt.pod.repository.UserRepository;
 import com.shirt.pod.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

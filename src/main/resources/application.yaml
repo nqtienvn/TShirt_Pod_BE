@@ -4,23 +4,23 @@ spring:
       secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351
       access-token-expiration: 3600
       refresh-token-expiration: 604800
-    oauth2:
-      enable: true
-      provider:
-        google:
-          client-id:
-          client-secret:
-          redirect-uri: http://localhost:8080/login/oauth2/code/google
-          scope:
-            - email
-            - profile
-        facebook:
-          client-id: ${FACEBOOK_APP_ID}
-          client-secret: ${FACEBOOK_APP_SECRET}
-          redirect-uri: http://localhost:8080/login/oauth2/code/facebook
-          scope:
-            - email
-            - public_profile
+#    oauth2:
+#      enable: true
+#      provider:
+#        google:
+#          client-id:
+#          client-secret:
+#          redirect-uri: http://localhost:8080/login/oauth2/code/google
+#          scope:
+#            - email
+#            - profile
+#        facebook:
+#          client-id: ${FACEBOOK_APP_ID}
+#          client-secret: ${FACEBOOK_APP_SECRET}
+#          redirect-uri: http://localhost:8080/login/oauth2/code/facebook
+#          scope:
+#            - email
+#            - public_profile
   datasource:
     url: jdbc:postgresql://localhost:5432/pod_db
     username: postgres
@@ -38,4 +38,15 @@ spring:
         format_sql: true
     open-in-view: false
 
+open:
+  api:
+    title: "C-Shop API"
+    version: "v1.0.0"
+    description: "api for pod_be of C-Shop project"
+    url: "http://localhost:8080"
+    description-server-url: "server-dev"
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG

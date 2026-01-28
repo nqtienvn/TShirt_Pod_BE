@@ -28,11 +28,4 @@ public final class SecurityConstants {
     public static final String DESIGN_UPDATE = "DESIGN_UPDATE";
     public static final String DESIGN_DELETE = "DESIGN_DELETE";
 
-    public static String hasAuthority(String authority) {
-        return "hasAuthority('" + authority + "')";
-    }
-
-    public static String hasAnyAuthority(String... authorities) {
-        return "hasAnyAuthority('" + String.join("','", authorities) + "')";
-    }
 }

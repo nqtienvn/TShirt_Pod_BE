@@ -2,6 +2,8 @@ package com.shirt.pod.controller;
 
 import com.shirt.pod.model.dto.request.CreateUserRequest;
 import com.shirt.pod.model.dto.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.shirt.pod.model.dto.response.UserDTO;
 import com.shirt.pod.security.CustomUserDetails;
 import com.shirt.pod.service.UserService;
@@ -16,10 +18,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@Tag(name = "User", description = "APIs for user management")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Get all users", description = "Returns a list of all users in the system. Only accessible by ADMIN role")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
@@ -32,6 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
+    @Operation(summary = "Get current user", description = "Returns detailed information of the currently authenticated user")
     public ApiResponse<UserDTO> getCurrentUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserDTO user = userService.getUserById(userDetails.getId());
 
@@ -43,6 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get user by ID", description = "Returns details of a specific user by ID. Only accessible by ADMIN role")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO user = userService.getUserById(id);
@@ -55,6 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
+    @Operation(summary = "Get user by email", description = "Returns details of a specific user by email address")
     public ApiResponse<UserDTO> getUserByEmail(@PathVariable String email) {
         UserDTO user = userService.getUserByEmail(email);
 
@@ -66,17 +73,19 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(summary = "Create new user", description = "Create a new user account with basic information")
     public ApiResponse<UserDTO> createUser(@RequestBody CreateUserRequest request) {
         UserDTO user = userService.createUser(request);
 
         return ApiResponse.<UserDTO>builder()
-                .code(HttpStatus.CREATED.value())
+                .code(HttpStatus.OK.value())
                 .message("User created successfully")
                 .data(user)
                 .build();
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user", description = "Delete a user from the system by ID. Only accessible by ADMIN role")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

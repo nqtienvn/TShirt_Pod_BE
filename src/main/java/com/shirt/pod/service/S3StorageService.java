@@ -1,19 +1,21 @@
 package com.shirt.pod.service;
 
-import com.shirt.pod.config.S3Config;
-import com.shirt.pod.exception.FileUploadException;
-import com.shirt.pod.exception.InvalidFileException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.shirt.pod.config.S3Config;
+import com.shirt.pod.exception.AppException;
+import com.shirt.pod.exception.ErrorCode;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Slf4j
 @Service
@@ -31,16 +33,18 @@ public class S3StorageService {
     
     public String uploadFile(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new InvalidFileException("File is empty");
+            throw new AppException(ErrorCode.FILE_CORRUPTED);
         }
         
         if (file.getSize() > MAX_FILE_SIZE) {
-            throw new InvalidFileException("File size exceeds maximum limit of 10MB");
+            double maxSizeMB = MAX_FILE_SIZE / (1024.0 * 1024.0);
+            double actualSizeMB = file.getSize() / (1024.0 * 1024.0);
+            throw new AppException(ErrorCode.FILE_TOO_LARGE, maxSizeMB, actualSizeMB);
         }
         
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-            throw new InvalidFileException("Invalid file type. Only JPG and PNG images are allowed");
+            throw new AppException(ErrorCode.INVALID_FILE_FORMAT, "JPG/PNG", contentType != null ? contentType : "unknown");
         }
         
         String originalFilename = file.getOriginalFilename();
@@ -65,9 +69,11 @@ public class S3StorageService {
             log.info("File uploaded successfully: {}", fileUrl);
             return fileUrl;
             
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Error while uploading file: {}", e.getMessage(), e);
-            throw new FileUploadException("Failed to upload file: " + e.getMessage(), e);
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED, e.getMessage());
         }
     }
     

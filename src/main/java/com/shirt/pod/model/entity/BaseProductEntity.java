@@ -8,22 +8,21 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
 /**
- * Base entity CHỈ có created fields
- * Dùng cho các entity KHÔNG CẦN track modified (Order, Payment, OrderItem,
- * etc.)
+ * Base entity cho Product entities
+ * Sử dụng created_at và updated_at để khớp với database schema
  */
 @Getter
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntityCreatedOnly {
+public abstract class BaseProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +32,7 @@ public abstract class BaseEntityCreatedOnly {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    // Note: created_by có thể không có trong một số database schema
-    // Nếu database không có column này, có thể comment lại hoặc thêm vào schema
-    // @CreatedBy
-    // @Column(name = "created_by", updatable = false)
-    // private String createdBy;
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 }

@@ -5,6 +5,7 @@ import com.shirt.pod.model.dto.response.OrderDTO;
 import com.shirt.pod.model.entity.enums.OrderStatus;
 import com.shirt.pod.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ public class OrderController {
     @GetMapping
     public ApiResponse<List<OrderDTO>> getOrders(@RequestParam(required = false) OrderStatus status) {
         return ApiResponse.<List<OrderDTO>>builder()
-                .code(200)
+                .code(HttpStatus.OK.value())
                 .message("Orders fetched successfully")
                 .data(orderService.getOrders(status))
                 .build();

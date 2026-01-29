@@ -4,7 +4,7 @@ public final class SecurityConstants {
 
     private SecurityConstants() {
     }
-
+//permission
     public static final String USER_VIEW = "USER_VIEW";
     public static final String USER_CREATE = "USER_CREATE";
     public static final String USER_UPDATE = "USER_UPDATE";

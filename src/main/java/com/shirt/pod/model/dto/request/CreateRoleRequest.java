@@ -24,9 +24,6 @@ public class CreateRoleRequest {
     @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;
 
-    /**
-     * Optional: Danh sách permission IDs để gán cho role ngay khi tạo
-     */
     @Builder.Default
     private Set<Long> permissionIds = new HashSet<>();
 }

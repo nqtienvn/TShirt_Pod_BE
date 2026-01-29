@@ -105,12 +105,12 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void createDefaultAdminUser(Role superAdminRole) {
-        String adminEmail = "admin@gmail.com";
+        String adminEmail = "admin";
 
         if (!userRepository.existsByEmail(adminEmail)) {
             User admin = User.builder()
                     .email(adminEmail)
-                    .password(passwordEncoder.encode("123456"))
+                    .password(passwordEncoder.encode("admin"))
                     .fullName("System Administrator")
                     .status(UserStatus.ACTIVE)
                     .roles(Set.of(superAdminRole))

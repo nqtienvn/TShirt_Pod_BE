@@ -22,9 +22,8 @@ public class UpdateRoleRequest {
     private String description;
 
     /**
-     * Danh sách permission IDs để gán cho role.
-     * Nếu null, không cập nhật permissions.
-     * Nếu empty set, xóa tất cả permissions.
+     * if null, not update permissions.
+     * if empty set, delete all permissions.
      */
     private Set<Long> permissionIds;
 }

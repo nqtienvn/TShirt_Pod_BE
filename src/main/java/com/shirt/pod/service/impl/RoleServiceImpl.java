@@ -47,24 +47,20 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public RoleDTO createRole(CreateRoleRequest request) {
-        // Kiểm tra duplicate role name
         if (roleRepository.existsByName(request.getName())) {
             throw new AppException(ErrorCode.DUPLICATE_NAME, request.getName());
         }
 
-        // Tạo role mới
         Role role = Role.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .permissions(new HashSet<>())
                 .build();
 
-        // Gán permissions nếu có
         if (request.getPermissionIds() != null && !request.getPermissionIds().isEmpty()) {
             Set<Permission> permissions = new HashSet<>(
                     permissionRepository.findAllById(request.getPermissionIds()));
 
-            // Kiểm tra xem tất cả permission IDs có tồn tại không
             if (permissions.size() != request.getPermissionIds().size()) {
                 throw new AppException(ErrorCode.INVALID_INPUT, "permissionIds");
             }
@@ -82,9 +78,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND, "id", id));
 
-        // Cập nhật name nếu có
         if (request.getName() != null && !request.getName().isBlank()) {
-            // Kiểm tra duplicate name (trừ chính nó)
             if (!role.getName().equals(request.getName()) &&
                     roleRepository.existsByName(request.getName())) {
                 throw new AppException(ErrorCode.DUPLICATE_NAME, request.getName());
@@ -92,22 +86,17 @@ public class RoleServiceImpl implements RoleService {
             role.setName(request.getName());
         }
 
-        // Cập nhật description nếu có
         if (request.getDescription() != null) {
             role.setDescription(request.getDescription());
         }
 
-        // Cập nhật permissions nếu có
         if (request.getPermissionIds() != null) {
             if (request.getPermissionIds().isEmpty()) {
-                // Xóa tất cả permissions
                 role.getPermissions().clear();
             } else {
-                // Gán permissions mới
                 Set<Permission> permissions = new HashSet<>(
                         permissionRepository.findAllById(request.getPermissionIds()));
 
-                // Kiểm tra xem tất cả permission IDs có tồn tại không
                 if (permissions.size() != request.getPermissionIds().size()) {
                     throw new AppException(ErrorCode.INVALID_INPUT, "permissionIds");
                 }
@@ -126,7 +115,6 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND, "id", id));
 
-        // Không cho xóa SUPER_ADMIN
         if (RoleConstant.SUPER_ADMIN.name().equals(role.getName())) {
             throw new AppException(ErrorCode.CANNOT_DELETE_DEFAULT_ROLE, role.getName());
         }

@@ -11,9 +11,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static com.shirt.pod.security.SecurityConstants.USER_CREATE;
+import static com.shirt.pod.security.SecurityConstants.USER_DELETE;
+import static com.shirt.pod.security.SecurityConstants.USER_VIEW;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +34,7 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Get all users", description = "Returns a list of all users in the system. Only accessible by ADMIN role")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('" + USER_VIEW + "')")
     public ApiResponse<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
 
@@ -49,7 +59,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Returns details of a specific user by ID. Only accessible by ADMIN role")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('" + USER_VIEW + "')")
     public ApiResponse<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO user = userService.getUserById(id);
 
@@ -62,6 +72,7 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     @Operation(summary = "Get user by email", description = "Returns details of a specific user by email address")
+    @PreAuthorize("hasAuthority('" + USER_VIEW + "')")
     public ApiResponse<UserDTO> getUserByEmail(@PathVariable String email) {
         UserDTO user = userService.getUserByEmail(email);
 
@@ -74,6 +85,7 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Create new user", description = "Create a new user account with basic information")
+    @PreAuthorize("hasAuthority('" + USER_CREATE + "')")
     public ApiResponse<UserDTO> createUser(@RequestBody CreateUserRequest request) {
         UserDTO user = userService.createUser(request);
 
@@ -86,7 +98,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user", description = "Delete a user from the system by ID. Only accessible by ADMIN role")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('" + USER_DELETE + "')")
     public ApiResponse<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
 

@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         @Override
         @Transactional
         public AuthResponse login(LoginRequest request) {
+                //not throw exception -> ok
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
                                                 request.getEmail(),

@@ -1,12 +1,14 @@
 package com.shirt.pod.exception;
 
-import com.shirt.pod.model.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.shirt.pod.model.dto.response.ApiResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiResponse> generateAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();

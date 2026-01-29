@@ -29,7 +29,6 @@ public class UserDTO implements Serializable {
     String phoneNumber;
     String avatarUrl;
     UserStatus status;
-    Set<Role> roles;
     Instant createdDate;
     Instant modifiedDate;
     String createdBy;

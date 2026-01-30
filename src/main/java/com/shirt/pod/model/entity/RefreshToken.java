@@ -14,7 +14,7 @@ import java.time.Instant;
 @Builder
 public class RefreshToken extends BaseEntityCreatedOnly {
 
-    @Column(nullable = false, unique = true, length = 500)
+    @Column(nullable = false, unique = true, length = 2000)
     private String token;
 
     @Column(name = "expiry_date", nullable = false)

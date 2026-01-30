@@ -2,6 +2,7 @@ package com.shirt.pod.security;
 
 import com.shirt.pod.config.JwtProperties;
 import com.shirt.pod.model.entity.Role;
+import com.shirt.pod.model.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,8 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
-
+    private static final String PERMISSIONS_CLAIMS = "permissions";
+    private static final String USER_ID_CLAIMS = "userid";
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -41,8 +43,8 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(userDetails.getEmail())
-                .claim("userId", userDetails.getId())
-                .claim("permissions", permissions)
+                .claim(USER_ID_CLAIMS, userDetails.getId())
+                .claim(PERMISSIONS_CLAIMS, permissions)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiryDate))
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
@@ -64,8 +66,8 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .subject(email)
-                .claim("userId", userId)
-                .claim("permissions", permissions)
+                .claim(USER_ID_CLAIMS, userId)
+                .claim(PERMISSIONS_CLAIMS, permissions)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiryDate))
                 .signWith(getSigningKey(), Jwts.SIG.HS512)
@@ -89,7 +91,7 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        return claims.get("userId", Long.class);
+        return claims.get(USER_ID_CLAIMS, Long.class);
     }
 
     public List<GrantedAuthority> getAuthoritiesFromToken(String token) {
@@ -99,7 +101,7 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        List<String> permissions = claims.get("permissions", List.class);
+        List<String> permissions = claims.get(PERMISSIONS_CLAIMS, List.class);
         if (permissions == null) {
             return Collections.emptyList();
         }
@@ -128,5 +130,54 @@ public class JwtTokenProvider {
             log.error("JWT claims string is empty");
         }
         return false;
+    }
+
+    private SecretKey getRefreshSigningKey() {
+        byte[] keyBytes = jwtProperties.getRefreshTokenSecret().getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String generateRefreshToken(User user) {
+        Instant now = Instant.now();
+        Instant expiryDate = now.plusSeconds(jwtProperties.getRefreshTokenExpiration());
+
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .claim(USER_ID_CLAIMS, user.getId())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiryDate))
+                .signWith(getRefreshSigningKey(), Jwts.SIG.HS512)
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(getRefreshSigningKey())
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (SecurityException ex) {
+            log.error("Invalid Refresh Token signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid Refresh Token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired Refresh Token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported Refresh Token");
+        } catch (IllegalArgumentException ex) {
+            log.error("Refresh Token claims string is empty");
+        }
+        return false;
+    }
+
+    public String getEmailFromRefreshToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getRefreshSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return claims.getSubject();
     }
 }

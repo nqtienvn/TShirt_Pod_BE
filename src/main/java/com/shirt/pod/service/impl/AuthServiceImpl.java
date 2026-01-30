@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         @Override
         @Transactional
         public AuthResponse login(LoginRequest request) {
-                //not throw exception -> ok
+                // not throw exception -> ok
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
                                                 request.getEmail(),
@@ -84,7 +84,6 @@ public class AuthServiceImpl implements AuthService {
                         throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS, request.getEmail());
                 }
 
-                // Sử dụng role USER cho user đăng ký mới
                 Role userRole = roleRepository.findByName(RoleConstant.USER.name())
                                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND, "name",
                                                 RoleConstant.USER.name()));
@@ -98,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
                                 .fullName(request.getFullName())
                                 .phoneNumber(request.getPhoneNumber())
                                 .status(UserStatus.ACTIVE)
-//                                .provider("LOCAL")
+                                // .provider("LOCAL")
                                 .roles(roles)
                                 .build();
 
@@ -129,6 +128,9 @@ public class AuthServiceImpl implements AuthService {
 
                 User user = refreshToken.getUser();
 
+                refreshTokenService.deleteRefreshToken(refreshToken);
+                RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
+
                 String accessToken = tokenProvider.generateAccessTokenFromEmail(
                                 user.getEmail(),
                                 user.getId(),
@@ -138,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
 
                 return AuthResponse.builder()
                                 .accessToken(accessToken)
-                                .refreshToken(refreshToken.getToken())
+                                .refreshToken(newRefreshToken.getToken())
                                 .expiresIn(jwtProperties.getAccessTokenExpiration())
                                 .user(userDTO)
                                 .build();

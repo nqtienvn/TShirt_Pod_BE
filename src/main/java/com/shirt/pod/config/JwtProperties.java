@@ -23,4 +23,7 @@ public class JwtProperties {
 
     @Positive(message = "Refresh token expiration must be positive")
     private Long refreshTokenExpiration;
+
+    @NotBlank(message = "Refresh token secret must not be blank")
+    private String refreshTokenSecret;
 }

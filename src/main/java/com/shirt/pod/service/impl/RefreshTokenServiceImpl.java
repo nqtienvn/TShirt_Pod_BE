@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +19,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProperties jwtProperties;
+    private final com.shirt.pod.security.JwtTokenProvider tokenProvider;
 
     @Override
     @Transactional
     public RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
-                .token(UUID.randomUUID().toString())
+                .token(tokenProvider.generateRefreshToken(user))
                 .expiryDate(Instant.now().plusSeconds(jwtProperties.getRefreshTokenExpiration()))
                 .build();
 
@@ -52,5 +52,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken findByToken(String token) {
         return refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new AppException(ErrorCode.REFRESH_TOKEN_INVALID));
+    }
+
+    @Override
+    @Transactional
+    public void deleteRefreshToken(RefreshToken token) {
+        refreshTokenRepository.delete(token);
     }
 }

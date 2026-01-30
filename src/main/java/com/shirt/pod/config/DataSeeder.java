@@ -118,7 +118,7 @@ public class DataSeeder implements CommandLineRunner {
 
             userRepository.save(admin);
             log.info("Created default admin user: {}", adminEmail);
-            log.warn("IMPORTANT: Default admin password is '123456'. Please change it after first login!");
+            log.warn("IMPORTANT: Default admin password is 'admin'");
         } else {
             log.info("Admin user already exists: {}", adminEmail);
         }

@@ -2,8 +2,12 @@ package com.shirt.pod.exception;
 
 import com.shirt.pod.model.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -15,5 +19,17 @@ public class GlobalExceptionHandler {
                 .message(exception.getFormattedMessage())
                 .build();
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
+    }
+    //lỗi thì bắt ở data nhé
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse> handlingMethodNotValidException(MethodArgumentNotValidException ex) {
+        List<String> errors = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> errors.add(error.getDefaultMessage()));
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(400)
+                .message("validate error")
+                .data(errors)
+                .build();
+        return ResponseEntity.badRequest().body(apiResponse);
     }
 }

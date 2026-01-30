@@ -1,14 +1,14 @@
 package com.shirt.pod.repository;
 
-import com.shirt.pod.model.entity.Role;
+import com.shirt.pod.model.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findByName(String name);
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
+    Optional<Permission> findByName(String name);
 
     boolean existsByName(String name);
 }

@@ -1,4 +1,11 @@
 spring:
+  security:
+    jwt:
+      secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351
+      access-token-expiration: 3600
+      refresh-token-expiration: 604800
+      refresh-token-secret: 782F413F4428472B4B6250655368566D597133743677397A24432646294A404E635266556A586E327235753877217A25432A462D4A614E645267556A586E3272
+
   datasource:
     url: jdbc:postgresql://localhost:5432/pod_db
     username: postgres
@@ -14,6 +21,17 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
     open-in-view: false
 
+open:
+  api:
+    title: "C-Shop API"
+    version: "v1.0.0"
+    description: "api for pod_be of C-Shop project"
+    url: "http://localhost:8080"
+    description-server-url: "server-dev"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG

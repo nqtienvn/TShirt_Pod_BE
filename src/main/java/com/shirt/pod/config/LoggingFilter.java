@@ -22,8 +22,8 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         // Bọc request và response
@@ -54,24 +54,44 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
 
     private String getRequestBody(ContentCachingRequestWrapper requestWrapper) {
-        byte[] buf = requestWrapper.getContentAsByteArray(); // lấy về content dạng byte lưu trong cache
+        if (isBinaryContent(requestWrapper.getContentType())) {
+            return "[Binary Content]";
+        }
+
+        byte[] buf = requestWrapper.getContentAsByteArray();
         if (buf.length == 0)
             return null;
         try {
-            return new String(buf, requestWrapper.getCharacterEncoding()); // trả về encode kiểu String
+            String content = new String(buf, requestWrapper.getCharacterEncoding());
+            return content.replace("\u0000", "");
         } catch (UnsupportedEncodingException e) {
             return "Unsupported Encoding";
         }
     }
 
     private String getResponseBody(ContentCachingResponseWrapper responseWrapper) {
+        if (isBinaryContent(responseWrapper.getContentType())) {
+            return "[Binary Content]";
+        }
+
         byte[] buf = responseWrapper.getContentAsByteArray();
         if (buf.length == 0)
             return null;
         try {
-            return new String(buf, responseWrapper.getCharacterEncoding());
+            String content = new String(buf, responseWrapper.getCharacterEncoding());
+            return content.replace("\u0000", "");
         } catch (UnsupportedEncodingException e) {
             return "Unsupported Encoding";
         }
+    }
+
+    private boolean isBinaryContent(String contentType) {
+        if (contentType == null)
+            return false;
+        return contentType.startsWith("image/") ||
+                contentType.startsWith("video/") ||
+                contentType.startsWith("audio/") ||
+                contentType.contains("pdf") ||
+                contentType.contains("octet-stream");
     }
 }

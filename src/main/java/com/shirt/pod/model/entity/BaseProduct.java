@@ -1,10 +1,7 @@
 package com.shirt.pod.model.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "base_products")
@@ -23,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BaseProduct extends BaseProductEntity {
+public class BaseProduct extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -36,13 +31,5 @@ public class BaseProduct extends BaseProductEntity {
     private String material;
 
     private Boolean active;
-
-    @OneToMany(mappedBy = "baseProduct", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<ProductVariant> variants = new ArrayList<>();
-
-    @OneToMany(mappedBy = "baseProduct", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<PrintArea> printAreas = new ArrayList<>();
 
 }

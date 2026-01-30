@@ -33,3 +33,7 @@ build/
 .vscode/
 .md/
 .sql/
+.md
+
+### Local config (do not push) ###
+**/SecurityConfig.java

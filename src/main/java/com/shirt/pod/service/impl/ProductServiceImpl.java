@@ -73,24 +73,21 @@ public class ProductServiceImpl implements ProductService {
     public ProductDetailDTO getProductDetailById(Long id) {
         log.debug("Getting product detail by id: {}", id);
 
-        // Fetch product with variants using fetch join
-        // Cannot fetch both variants and printAreas together due to Hibernate MultipleBagFetchException
-        BaseProduct product = baseProductRepository.findByIdWithVariants(id)
+        BaseProduct product = baseProductRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Product not found with id: {}", id);
                     return new AppException(ErrorCode.PRODUCT_NOT_FOUND, "id", id);
                 });
 
-        // Load printAreas separately (lazy loading within transaction)
-        // This will trigger a separate query but avoids MultipleBagFetchException
-        product.getPrintAreas().size();
+        ProductDetailDTO dto = productMapper.toDetailDTO(product);
+        List<ProductVariant> variants = productVariantRepository.findByBaseProductId(id);
+        List<PrintArea> printAreas = printAreaRepository.findByBaseProductId(id);
+        dto.setVariants(productMapper.toVariantDTOList(variants));
+        dto.setPrintAreas(productMapper.toPrintAreaDTOList(printAreas));
 
-        log.info("Found product detail: {} with {} variants and {} print areas", 
-                product.getName(), 
-                product.getVariants().size(), 
-                product.getPrintAreas().size());
-        
-        return productMapper.toDetailDTO(product);
+        log.info("Found product detail: {} with {} variants and {} print areas",
+                product.getName(), variants.size(), printAreas.size());
+        return dto;
     }
 
     @Override

@@ -29,6 +29,11 @@ public abstract class BaseEntityCreatedOnly {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Note: print_areas và product_variants không có timestamp columns trong database schema
-    // Nếu cần auditing, có thể thêm sau khi update database schema
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private Instant createdDate;
+
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    private String createdBy;
 }

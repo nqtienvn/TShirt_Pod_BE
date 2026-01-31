@@ -28,6 +28,6 @@ public class ProductDTO implements Serializable {
     BigDecimal basePrice;
     String material;
     Boolean active;
-    Instant createdAt;
-    Instant updatedAt;
+    Instant createdDate;
+    Instant modifiedDate;
 }

@@ -17,27 +17,19 @@ public interface ProductService {
 
     List<ProductDTO> getAllProducts(Boolean activeOnly);
 
-
     ProductDTO getProductById(Long id);
-
 
     ProductDetailDTO getProductDetailById(Long id);
 
     ProductDTO createProduct(CreateProductRequest request);
 
-
     ProductDTO updateProduct(Long id, UpdateProductRequest request);
 
-
     void deleteProduct(Long id);
-
 
     void activateProduct(Long id);
 
     void deactivateProduct(Long id);
-
-    // ========== Variant Management ==========
-
 
     List<ProductVariantDTO> getVariantsByProductId(Long productId);
 
@@ -47,13 +39,9 @@ public interface ProductService {
 
     void deleteVariant(Long variantId);
 
-    // ========== PrintArea Management ==========
-
     List<PrintAreaDTO> getPrintAreasByProductId(Long productId);
 
-
     PrintAreaDTO createPrintArea(Long productId, CreatePrintAreaRequest request);
-
 
     PrintAreaDTO updatePrintArea(Long printAreaId, UpdatePrintAreaRequest request);
 

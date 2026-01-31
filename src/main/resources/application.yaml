@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pod_db
     username: postgres
-    password: admin
+    password: root
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -22,13 +22,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     open-in-view: false
-
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data.sql
-
-
 
 open:
   api:

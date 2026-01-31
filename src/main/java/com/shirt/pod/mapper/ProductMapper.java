@@ -23,8 +23,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProductMapper {
     
-    @Mapping(target = "createdAt", source = "createdDate")
-    @Mapping(target = "updatedAt", source = "modifiedDate")
     ProductDTO toDTO(BaseProduct product);
 
     List<ProductDTO> toDTOList(List<BaseProduct> products);
@@ -33,8 +31,6 @@ public interface ProductMapper {
 
     void updateEntity(UpdateProductRequest request, @MappingTarget BaseProduct product);
 
-    @Mapping(target = "createdAt", source = "createdDate")
-    @Mapping(target = "updatedAt", source = "modifiedDate")
     @Mapping(target = "variants", ignore = true)
     @Mapping(target = "printAreas", ignore = true)
     ProductDetailDTO toDetailDTO(BaseProduct product);

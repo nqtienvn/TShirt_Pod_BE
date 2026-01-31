@@ -23,17 +23,15 @@ import java.util.List;
 @Builder
 public class ProductDetailDTO implements Serializable {
 
-    // Product information
     Long id;
     String name;
     String description;
     BigDecimal basePrice;
     String material;
     Boolean active;
-    Instant createdAt;
-    Instant updatedAt;
+    Instant createdDate;
+    Instant modifiedDate;
 
-    // Related data
     List<ProductVariantDTO> variants;
     List<PrintAreaDTO> printAreas;
 }

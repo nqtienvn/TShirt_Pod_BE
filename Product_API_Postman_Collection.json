@@ -1,0 +1,375 @@
+{
+	"info": {
+		"name": "Product & Variants API",
+		"description": "API Collection for Product, Variant, and PrintArea management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products"]
+						}
+					}
+				},
+				{
+					"name": "Get All Products (Active Only)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products?activeOnly=true",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products"],
+							"query": [
+								{
+									"key": "activeOnly",
+									"value": "true"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Product By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Product Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/detail",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "detail"]
+						}
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Áo Polo Premium\",\n  \"description\": \"Áo polo cao cấp, chất liệu tốt\",\n  \"basePrice\": 350000.00,\n  \"material\": \"Cotton 65% + Polyester 35%\",\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products"]
+						}
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Áo Polo Premium Updated\",\n  \"basePrice\": 380000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Activate Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/activate",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "activate"]
+						}
+					}
+				},
+				{
+					"name": "Deactivate Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/deactivate",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "deactivate"]
+						}
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Variants",
+			"item": [
+				{
+					"name": "Get Variants By Product ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/variants",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "variants"]
+						}
+					}
+				},
+				{
+					"name": "Create Variant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"colorName\": \"Xanh Dương\",\n  \"colorHex\": \"#0066CC\",\n  \"size\": \"XL\",\n  \"sku\": \"TSHIRT-BLUE-XL\",\n  \"stockQuantity\": 50,\n  \"imageUrl\": \"https://example.com/images/tshirt-blue-xl.jpg\",\n  \"priceAdjustment\": 30000.00,\n  \"active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/variants",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "variants"]
+						}
+					}
+				},
+				{
+					"name": "Update Variant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stockQuantity\": 150,\n  \"priceAdjustment\": 5000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/variants/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "variants", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Variant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/variants/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "variants", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Print Areas",
+			"item": [
+				{
+					"name": "Get Print Areas By Product ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/print-areas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "print-areas"]
+						}
+					}
+				},
+				{
+					"name": "Create Print Area",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sleeve\",\n  \"widthMm\": 100.00,\n  \"heightMm\": 500.00,\n  \"topOffsetMm\": 0.00,\n  \"leftOffsetMm\": 0.00,\n  \"maskImageUrl\": null\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/print-areas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "print-areas"]
+						}
+					}
+				},
+				{
+					"name": "Update Print Area",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"widthMm\": 350.00,\n  \"heightMm\": 400.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/print-areas/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "print-areas", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Print Area",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/print-areas/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "print-areas", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Error Cases",
+			"item": [
+				{
+					"name": "Get Product Not Found",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/999",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "999"]
+						}
+					}
+				},
+				{
+					"name": "Create Product Duplicate Name",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Áo Thun Cổ Tròn\",\n  \"basePrice\": 250000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products"]
+						}
+					}
+				},
+				{
+					"name": "Create Variant Duplicate SKU",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"TSHIRT-BLACK-S\",\n  \"size\": \"M\",\n  \"stockQuantity\": 100\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products/1/variants",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products", "1", "variants"]
+						}
+					}
+				},
+				{
+					"name": "Create Product Validation Error",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"basePrice\": -100\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "products"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

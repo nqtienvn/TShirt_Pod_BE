@@ -1,6 +1,8 @@
 package com.shirt.pod.exception;
 
 import com.shirt.pod.model.dto.response.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,11 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .orElse("Validation failed");
+        ApiResponse<Void> body = ApiResponse.<Void>builder()
+                .code(ErrorCode.INVALID_INPUT.getCode())
+                .message(message)
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ApiResponse> generateAppException(AppException exception) {
+    public ResponseEntity<ApiResponse<Void>> handleAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();
-        ApiResponse apiResponse = ApiResponse.builder()
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
                 .code(errorCode.getCode())
                 .message(exception.getFormattedMessage())
                 .build();
@@ -31,5 +48,16 @@ public class GlobalExceptionHandler {
                 .data(errors)
                 .build();
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnknownException(Exception exception) {
+        log.error("Unhandled exception", exception);
+        ErrorCode errorCode = ErrorCode.UNKNOWN_ERROR;
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
     }
 }
